@@ -41,6 +41,7 @@ exports.getAll = (Model, populateOptions) => catchAsync(async (req, res, next) =
         .sort()
         .limitFields()
         .paginate();
+    // const doc = await features.query.explain();
     const doc = await features.query;
     if (!doc) return next(new AppError('There are no document', 404));
     return res.status(200).json({ status: "success", results: doc.length, data: { data: doc } });

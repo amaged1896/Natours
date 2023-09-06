@@ -13,7 +13,7 @@ exports.aliasTopTours = catchAsync(async (req, res, next) => {
 exports.createTour = factory.createOne(Tour);
 exports.updateTour = factory.updateOne(Tour);
 exports.deleteTour = factory.deleteOne(Tour);
-//                                      populate options    
+//                                      populate options
 exports.getTour = factory.getOne(Tour, { path: 'reviews' });
 exports.getAllTours = factory.getAll(Tour);
 
@@ -30,32 +30,31 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
         avgRating: { $avg: '$ratingsAverage' },
         avgPrice: { $avg: '$price' },
         minPrice: { $min: '$price' },
-        maxPrice: { $max: '$price' },
+        maxPrice: { $max: '$price' }
       }
     },
     {
       $sort: { avgPrice: 1 }
-    },
+    }
     // {
     //   $match: { _id: { $ne: 'EASY' } }
     // }
   ]);
   if (!stats) return next(new AppError('There are no statistics', 404));
-  return res.status(200).json({ status: "success", data: stats });
+  return res.status(200).json({ status: 'success', data: stats });
 });
 
 exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
-
   const year = req.params.year * 1;
   const plan = await Tour.aggregate([
     {
-      $unwind: '$startDates',
+      $unwind: '$startDates'
     },
     {
       $match: {
         startDates: {
           $gte: new Date(`${year}-01-01`),
-          $lte: new Date(`${year}-12-31`),
+          $lte: new Date(`${year}-12-31`)
         }
       }
     },
@@ -82,6 +81,5 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
     }
   ]);
 
-  return res.status(200).json({ status: "success", data: plan });
-
-}); 
+  return res.status(200).json({ status: 'success', data: plan });
+});
